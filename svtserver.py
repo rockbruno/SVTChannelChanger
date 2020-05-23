@@ -54,17 +54,7 @@ class Button(BigRedButton):
     key_presser = 0
 
     def start(self):
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True
-        thread.start()
         self.key_presser = KeyPresser()
-        
-    def _run(self):
-        try:
-            self.run()
-        except:
-            print 'Avoided USB exception'
-            self._run()
 
     def on_unknown(self):
         print 'The button is in an unknown state'
@@ -105,4 +95,8 @@ print 'Nenezudo\'s channel server started'
 button = Button()
 button.start()
 while True:
-  signal.pause()
+    try:
+        button.run()
+    except Exception as e:
+        print "Exception raised: {}".format(e)
+        print 'Avoided USB exception'
